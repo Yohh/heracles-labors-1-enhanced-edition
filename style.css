@@ -1,0 +1,37 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  display: flex;
+  background-color: black;
+}
+
+div {
+  display: flex;
+  justify-content: space-evenly;
+  height: 90vh;
+  width: 100vw;
+  padding: 5vh 2vw;
+}
+
+.fighter {
+  height: 40vh;
+  width: 14vw;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  padding: 0 3vh;
+  background-color: rgb(255, 255, 255);
+}
+
+.nemeanLion {
+    text-align: right;
+}
+
+.battleArena {
+  height: 90vh;
+  width: 50vw;
+  background-color: rgb(255, 255, 255);
+}

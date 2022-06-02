@@ -1,5 +1,3 @@
-/* Fighter class definition */
-
 const MAX_LIFE = 100;
 
 export class Fighter {
