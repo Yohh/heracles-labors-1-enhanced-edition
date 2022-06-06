@@ -1,4 +1,4 @@
-const MAX_LIFE = 100;
+const MAX_LIFE = 30;
 
 class Fighter {
   constructor(name, strength, dexterity) {
@@ -6,12 +6,18 @@ class Fighter {
     this.strength = strength;
     this.dexterity = dexterity;
     this.life = MAX_LIFE;
+    this.hit = "";
+    this.dodge = "";
   }
 }
 
 let heracles = new Fighter("⚔️  Heracles", 20, 6);
+heracles.hit = 'heracles_attacks.jpg';
+heracles.dodge = "heraclesDodge.jpg";
 
 let nemeanLion = new Fighter("🦁 Nemean lion", 11, 13);
+nemeanLion.hit = 'lion_Attacks.webp';
+nemeanLion.dodge = "lionDodge.jpg";
 
 //
 //
@@ -29,6 +35,9 @@ const shape = document.querySelector(".shape");
 const heraclesSheet = document.querySelector(".heraclesSheet");
 const battleArena = document.querySelector(".battleArena");
 const nemeanLionSheet = document.querySelector(".nemeanLionSheet");
+const actionText = document.querySelector(".actionText");
+const resultText = document.querySelector(".resultText");
+const result = document.querySelector(".result");
 
 //_________________________________________________________________________________________
 
@@ -55,7 +64,7 @@ const updateLionSheet = () => {
   array2 = [];
   Object.keys(nemeanLion).forEach((key) => array2.push(nemeanLion[key]));
   nemeanLionCarac.forEach(
-    (elem, index) => (elem.innerHTML = elem.innerHTML = array2[index])
+    (elem, index) => (elem = elem.innerHTML = array2[index])
   );
 };
 updateLionSheet();
@@ -76,26 +85,43 @@ const fight = (attacker, attacked) => {
   if (attacker.life > 0) {
     let damage =
       Math.ceil(Math.random() * attacker.strength) - attacked.dexterity;
+    actionText.innerHTML = `${attacker.name} hits ${attacked.name}`;
     if (damage > 0) {
       attacked.life -= damage;
-      if (attacked.life <= 0) attacked.life = "☠️";
-      // console.log(
-      //   `${attacker.name} hits ${attacked.name}, ${attacked.name} life's left: ${attacked.life}`
-      // );
+      resultText.innerHTML = `${attacked.name} takes ${damage} damages `;
+      battleArena.style.backgroundImage = `url(${attacker.hit} )`
+      if (attacked.life <= 0) {
+        attacked.life = "☠️";
+        if (heracles.life != "☠️") {
+          battleArena.style.backgroundImage = "url('heraclesVictory.jpg')";
+          actionText.innerHTML = "⚔️  Heracles wins!! 🏆";
+        } else {
+          battleArena.style.backgroundImage = "url('lionVictory.jpg')";
+          actionText.innerHTML = "🦁 Nemean lion wins!! 🏆";
+        }
+        result.style.display = "none";
+        clearInterval(match);
+      }
       updateHeraclesSheet();
       updateLionSheet();
     } else {
-      // console.log(`${attacker.name} hits ${attacked.name}, ${attacked.name} has dodge`);
+      resultText.innerHTML = `${attacked.name} has dodge`;
+      battleArena.style.backgroundImage = `url(${attacked.dodge}`;
       updateHeraclesSheet();
       updateLionSheet();
     }
   }
 };
 
-for (let i = 0; heracles.life > 0 && nemeanLion.life > 0; i++) {
-  // console.log(`round: ${i + 1}`);
-  fight(heracles, nemeanLion);
-  fight(nemeanLion, heracles);
-}
+let round = 0;
 
-// heracles.life != 0 ? console.log("⚔️  Heracles wins!! 🏆") : console.log("🦁 Nemean lion wins!! 🏆")
+const battle = () => {
+  round++;
+  if (round % 2 === 0) {
+    fight(heracles, nemeanLion);
+  } else {
+    fight(nemeanLion, heracles);
+  }
+};
+
+let match = setInterval(battle, 1000);
